@@ -4,7 +4,7 @@ const { Blog } = require('../models')
 
 router.get('/', async (req, res) => {
   const blogs = await Blog.findAll({})
-  return res.json(blogs)
+  return res.status(200).json(blogs)
 })
 
 router.post('/', async (req, res) => {
@@ -24,6 +24,15 @@ router.delete('/:id', blogFinder, async (req, res) => {
   }
   await res.blog.destroy()
   return res.status(204).end()
+})
+
+router.put('/:id', blogFinder, async (req, res) => {
+  if (!req.blog) {
+    return res.status(404).end()
+  }
+  const { likes } = req.body
+  await req.blog.update({ likes })
+  return res.status(200).json(req.blog)
 })
 
 module.exports = router

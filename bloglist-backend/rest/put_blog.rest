@@ -1,0 +1,8 @@
+@id = 1
+PUT http://localhost:3001/api/blogs/{{id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "likes": 3
+}
