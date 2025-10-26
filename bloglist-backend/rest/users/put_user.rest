@@ -1,0 +1,16 @@
+PUT http://localhost:3001/api/users/lseimandi
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "lseimandi2"
+}
+
+### Revert 
+PUT http://localhost:3001/api/users/lseimandi2
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "lseimandi"
+}
