@@ -1,8 +1,8 @@
-@id = 1
+@id = 6
 PUT http://localhost:3001/api/blogs/{{id}}
 Content-Type: application/json
 Accept: application/json
 
 {
-  "likes": 3
+  "likes": 8
 }

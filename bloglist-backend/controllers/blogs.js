@@ -4,7 +4,12 @@ const { NotFoundError, UnauthorizedError } = require('../util/errors')
 const { tokenExtractor } = require('../util/middlewares')
 
 router.get('/', async (req, res) => {
-  const blogs = await Blog.findAll({})
+  const blogs = await Blog.findAll({
+    include: {
+      model: User,
+    },
+    attributes: { exclude: ['userId'] },
+  });
   return res.status(200).json(blogs)
 })
 
@@ -15,7 +20,12 @@ router.post('/', tokenExtractor, async (req, res) => {
 })
 
 const blogFinder = async (req, res, next) => {
-  req.blog = await Blog.findByPk(req.params.id)
+  req.blog = await Blog.findByPk(req.params.id, {
+    include: {
+      model: User,
+    },
+    attributes: { exclude: ['userId'] },
+  });
   if (!req.blog) {
     throw new NotFoundError('Error, blog not found')
   }

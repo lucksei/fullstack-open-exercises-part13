@@ -1,9 +1,13 @@
 const router = require('express').Router();
-const { User } = require('../models');
+const { User, Blog } = require('../models');
 const { NotFoundError } = require('../util/errors');
 
 router.get('/', async (req, res) => {
-  const users = await User.findAll();
+  const users = await User.findAll({
+    include: {
+      model: Blog,
+    },
+  });
   res.json(users);
 });
 
@@ -13,7 +17,11 @@ router.post('/', async (req, res) => {
 });
 
 const userFinder = async (req, res, next) => {
-  req.user = await User.findByPk(req.params.id);
+  req.user = await User.findByPk(req.params.id, {
+    include: {
+      model: Blog,
+    },
+  });
   if (!req.user) {
     throw new NotFoundError('Error, user not found')
   }
