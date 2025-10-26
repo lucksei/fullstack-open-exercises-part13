@@ -1,6 +1,6 @@
 const router = require('express').Router()
+const { NotFoundError } = require('../util/errors')
 const { Blog } = require('../models')
-
 
 router.get('/', async (req, res) => {
   const blogs = await Blog.findAll({})
@@ -15,23 +15,19 @@ router.post('/', async (req, res) => {
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id)
+  if (!req.blog) {
+    throw new NotFoundError('Error, blog not found')
+  }
   next()
 }
 
 router.delete('/:id', blogFinder, async (req, res) => {
-  if (!req.blog) {
-    return res.status(404).end()
-  }
-  await res.blog.destroy()
+  await req.blog.destroy()
   return res.status(204).end()
 })
 
 router.put('/:id', blogFinder, async (req, res) => {
-  if (!req.blog) {
-    return res.status(404).end()
-  }
-  const { likes } = req.body
-  await req.blog.update({ likes })
+  await req.blog.update({ likes: req.body.likes })
   return res.status(200).json(req.blog)
 })
 

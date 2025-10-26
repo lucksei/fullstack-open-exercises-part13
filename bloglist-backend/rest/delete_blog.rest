@@ -1,2 +1,2 @@
-@id = 3
+@id = 4
 DELETE http://localhost:3001/api/blogs/{{id}}
