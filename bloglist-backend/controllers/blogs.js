@@ -1,6 +1,6 @@
 const router = require('express').Router()
-const { NotFoundError } = require('../util/errors')
 const { Blog, User } = require('../models')
+const { NotFoundError, UnauthorizedError } = require('../util/errors')
 const { tokenExtractor } = require('../util/middlewares')
 
 router.get('/', async (req, res) => {
@@ -22,9 +22,12 @@ const blogFinder = async (req, res, next) => {
   next()
 }
 
-router.delete('/:id', blogFinder, async (req, res) => {
-  await req.blog.destroy()
-  return res.status(204).end()
+router.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
+  if (req.blog.userId !== req.decodedToken.id) {
+    throw new UnauthorizedError('Error, blog is not owned by user')
+  }
+  await req.blog.destroy();
+  return res.status(204).end();
 })
 
 router.put('/:id', blogFinder, async (req, res) => {

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { NotFoundError } = require("./errors");
+const { NotFoundError, UnauthorizedError } = require("./errors");
 const { ValidationError } = require('sequelize')
 
 const { SECRET } = require('../util/config');
@@ -12,6 +12,9 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ValidationError) {
     return res.status(400).json({ error: err.message })
   }
+  if (err instanceof UnauthorizedError) {
+    return res.status(401).json({ error: err.message })
+  }
 
   return res.status(500).json({ error: err.message })
 }
@@ -23,15 +26,20 @@ const tokenExtractor = (req, res, next) => {
     try {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
     } catch (err) {
-      return res.status(401).json({ error: 'token invalid' });
+      throw new UnauthorizedError('token invalid');
     }
   } else {
-    return res.status(401).json({ error: 'token missing' });
+    throw new UnauthorizedError('token missing')
   }
   next()
+}
+
+const unknownEndpoint = (req, res) => {
+  return res.status(404).send({ error: `unknown endpoint ${req.method} ${req.url}` })
 }
 
 module.exports = {
   errorHandler,
   tokenExtractor,
+  unknownEndpoint,
 }

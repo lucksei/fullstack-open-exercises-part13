@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+const { User } = require('../models');
 
 const { SECRET } = require('../util/config');
-const { User } = require('../models');
-const { response } = require('express');
 
 router.post('/', async (req, res) => {
 

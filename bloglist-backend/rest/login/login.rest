@@ -6,3 +6,13 @@ Accept: application/json
   "username": "lseimandi@example.com",
   "password": "secret"
 }
+
+### Login as alternate user
+POST http://localhost:3001/api/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "seconduser@example.com",
+  "password": "secret"
+}

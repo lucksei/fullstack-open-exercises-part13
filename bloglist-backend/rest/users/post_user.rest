@@ -6,3 +6,13 @@ Accept: application/json
   "username": "lseimandi@example.com",
   "name": "Luca Seimandi"
 }
+
+### alternate user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "seconduser@example.com",
+  "name": "Second User"
+}
