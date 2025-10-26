@@ -3,6 +3,6 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "lseimandi",
+  "username": "lseimandi@example.com",
   "name": "Luca Seimandi"
 }

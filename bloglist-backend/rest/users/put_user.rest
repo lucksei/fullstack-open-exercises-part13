@@ -1,13 +1,13 @@
-PUT http://localhost:3001/api/users/lseimandi
+PUT http://localhost:3001/api/users/lseimandi@example.com
 Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "lseimandi2"
+  "username": "lseimandi@example.com"
 }
 
-### Revert 
-PUT http://localhost:3001/api/users/lseimandi2
+### fail validation
+PUT http://localhost:3001/api/users/lseimandi@example.com
 Content-Type: application/json
 Accept: application/json
 
