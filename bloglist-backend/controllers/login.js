@@ -6,15 +6,14 @@ const { User } = require('../models');
 const { response } = require('express');
 
 router.post('/', async (req, res) => {
-  const body = req.body;
 
   const user = await User.findOne({
     where: {
-      username: body.username
+      username: req.body.username
     }
   })
 
-  const passwordCorrect = body.password === 'secret';
+  const passwordCorrect = req.body.password === 'secret';
 
   if (!(user && passwordCorrect)) {
     return res.status(401).json({

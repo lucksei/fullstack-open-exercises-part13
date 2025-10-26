@@ -1,9 +1,35 @@
+### First blog
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxzZWltYW5kaUBleGFtcGxlLmNvbSIsImlkIjoxLCJpYXQiOjE3NjE1MTA4NDZ9.ZRz14YprFSCJEKoZWnmwSAXch8hE66pAGEDJ3DP3fp8
 
 {
   "title": "React patterns",
   "author": "Michael Chan",
   "url": "https://reactpatterns.com/"
+}
+
+### Second blog
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxzZWltYW5kaUBleGFtcGxlLmNvbSIsImlkIjoxLCJpYXQiOjE3NjE1MTA4NDZ9.ZRz14YprFSCJEKoZWnmwSAXch8hE66pAGEDJ3DP3fp8
+
+{
+  "title": "Not my proudest moment",
+  "author": "Luca Seimandi",
+  "url": "http://localhost:3000/"
+}
+
+### Third blog
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxzZWltYW5kaUBleGFtcGxlLmNvbSIsImlkIjoxLCJpYXQiOjE3NjE1MTA4NDZ9.ZRz14YprFSCJEKoZWnmwSAXch8hE66pAGEDJ3DP3fp8
+
+{
+  "title": "Funny enough, my proudest moment",
+  "author": "Luca Seimandi",
+  "url": "http://localhost:3000/"
 }
