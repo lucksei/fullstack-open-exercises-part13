@@ -1,12 +1,13 @@
 PUT http://localhost:3001/api/users/lseimandi@example.com
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxzZWltYW5kaUBleGFtcGxlLmNvbSIsImlkIjoxLCJpYXQiOjE3NjE1ODc1ODF9.9s3qfqgOl6WI-CYs-O5oAIZ6GAoJsvMGIX15hMHkscI
 
 {
   "username": "lseimandi@example.com"
 }
 
-### fail validation
+### Fail validation
 PUT http://localhost:3001/api/users/lseimandi@example.com
 Content-Type: application/json
 Accept: application/json
