@@ -1,1 +1,5 @@
+### Get all blogs
 GET http://localhost:3001/api/blogs
+
+### Search for blogs
+GET http://localhost:3001/api/blogs?search=react
