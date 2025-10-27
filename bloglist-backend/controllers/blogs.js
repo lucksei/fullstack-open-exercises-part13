@@ -3,6 +3,7 @@ const { Op } = require('sequelize')
 const { Blog, User } = require('../models')
 const { NotFoundError, UnauthorizedError } = require('../util/errors')
 const { tokenExtractor } = require('../util/middlewares')
+const { sequelize } = require('../util/db')
 
 router.get('/', async (req, res) => {
   const where = {};
@@ -21,7 +22,8 @@ router.get('/', async (req, res) => {
       model: User,
     },
     attributes: { exclude: ['userId'] },
-    where
+    where,
+    order: [['likes', 'DESC']],
   });
 
   return res.status(200).json(blogs)
