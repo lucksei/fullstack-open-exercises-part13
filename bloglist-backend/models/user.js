@@ -23,6 +23,7 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+  // NOTE: Part of the material, unused, TODO: delete later
   // admin: {
   //   type: DataTypes.BOOLEAN,
   //   defaultValue: false,
