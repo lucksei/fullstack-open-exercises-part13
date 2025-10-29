@@ -2,7 +2,14 @@ const router = require('express').Router();
 const { ReadingList } = require('../models');
 
 router.post('/', async (req, res) => {
-  return res.status(403).json({ "error": "not implemented" })
+  const { userId, blogId } = req.body;
+
+  const readingList = await ReadingList.create({
+    user_id: userId,
+    blog_id: blogId,
+  }, { returning: true });
+
+  return res.status(201).json(readingList);
 });
 
 module.exports = router;

@@ -30,19 +30,11 @@ ReadingList.init({
     allowNull: false,
     defaultValue: false
   },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
 }, {
   sequelize,
   underscored: true,
   timestamps: true,
-  modelName: 'reading_list',
+  modelName: 'reading_lists',
 });
 
 module.exports = ReadingList;
