@@ -6,6 +6,7 @@ const { NotFoundError } = require('../util/errors');
 router.get('/', async (req, res) => {
   const users = await User.findAll({
     include: [
+      // NOTE: Replaced for exercise 13.20. TODO delete
       // {
       //   model: Blog,
       //   attributes: { exclude: ['userId'] },
@@ -17,6 +18,7 @@ router.get('/', async (req, res) => {
         through: { attributes: ['id', 'read'] },
       }
     ]
+    // NOTE: Replaced for exercise 13.20. TODO delete
     // include: {
     //   model: Blog,
     // },
