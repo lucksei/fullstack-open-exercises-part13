@@ -48,6 +48,6 @@ Blog.init({
   underscored: true,
   timestamps: true,
   modelName: 'blog',
-})
+});
 
-module.exports = Blog
+module.exports = Blog;
