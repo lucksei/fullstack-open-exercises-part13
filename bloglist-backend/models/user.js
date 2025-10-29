@@ -23,12 +23,13 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+  disabled: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
   // NOTE: Part of the material, unused, TODO: delete later
   // admin: {
-  //   type: DataTypes.BOOLEAN,
-  //   defaultValue: false,
-  // },
-  // disabled: {
   //   type: DataTypes.BOOLEAN,
   //   defaultValue: false,
   // },

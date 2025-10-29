@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
-const { User } = require('../models');
+const { User, Session } = require('../models');
 
 const { SECRET } = require('../util/config');
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
 
   const user = await User.findOne({
     where: {
@@ -12,8 +12,19 @@ router.post('/', async (req, res) => {
     }
   })
 
-  const passwordCorrect = req.body.password === 'secret';
+  if (!(user)) {
+    return res.status(401).json({
+      error: 'invalid username or password'
+    });
+  }
 
+  if (user.disabled) {
+    return res.status(401).json({
+      error: 'user is disabled'
+    });
+  }
+
+  const passwordCorrect = req.body.password === 'secret';
   if (!(user && passwordCorrect)) {
     return res.status(401).json({
       error: 'invalid username or password'
@@ -27,9 +38,15 @@ router.post('/', async (req, res) => {
 
   const token = jwt.sign(userForToken, SECRET);
 
+
+
   return res
     .status(200)
     .send({ token, username: user.username, name: user.name });
+});
+
+router.delete('/logout', (req, res) => {
+  return res.status(404).json({ error: 'not implemented' });
 });
 
 module.exports = router;

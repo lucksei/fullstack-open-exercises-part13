@@ -6,7 +6,7 @@ This is the backend for the bloglist app for the Part 13 of the Full Stack Open 
 
 1. Create a .env file with the following variables:
 
-```
+```sh
 PORT=3001
 DATABASE_URL=postgres://bloglist:<password>@<host>:<port>/bloglist
 SECRET=secretword
