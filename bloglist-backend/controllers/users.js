@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { where, Op } = require('sequelize');
 const { User, Blog, ReadingList } = require('../models');
 const { NotFoundError } = require('../util/errors');
 
@@ -32,15 +33,36 @@ router.post('/', async (req, res) => {
 });
 
 const userFinder = async (req, res, next) => {
+  const whereRead = {};
+
+  if (req.query.read) {
+    whereRead.read = {
+      [Op.eq]: req.query.read
+    }
+  }
   if (req.params.id) {
     req.user = await User.findByPk(req.params.id, {
-      include: { model: Blog, },
+      include: [
+        {
+          model: Blog,
+          as: 'readings',
+          attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+          through: { attributes: ['id', 'read'], where: whereRead },
+        }
+      ],
     });
   }
   if (req.params.username) {
     req.user = await User.findOne({
       where: { username: req.params.username },
-      include: { model: Blog, },
+      include: [
+        {
+          model: Blog,
+          as: 'readings',
+          attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+          through: { attributes: ['id', 'read'], where: whereRead },
+        }
+      ]
     })
   }
   if (!req.user) {
@@ -50,6 +72,10 @@ const userFinder = async (req, res, next) => {
 };
 
 router.get('/:id', userFinder, async (req, res) => {
+  return res.status(200).json(req.user);
+})
+
+router.get('/username/:username', userFinder, async (req, res) => {
   return res.status(200).json(req.user);
 })
 
