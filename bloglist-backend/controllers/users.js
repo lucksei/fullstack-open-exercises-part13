@@ -2,16 +2,12 @@ const router = require('express').Router();
 const { where, Op } = require('sequelize');
 const { User, Blog, ReadingList } = require('../models');
 const { NotFoundError } = require('../util/errors');
+const { authValidation } = require('../util/middlewares');
 
 
-router.get('/', async (req, res) => {
+router.get('/', authValidation, async (req, res) => {
   const users = await User.findAll({
     include: [
-      // NOTE: Replaced for exercise 13.20. TODO delete
-      // {
-      //   model: Blog,
-      //   attributes: { exclude: ['userId'] },
-      // },
       {
         model: Blog,
         as: 'readings',
@@ -19,10 +15,6 @@ router.get('/', async (req, res) => {
         through: { attributes: ['id', 'read'] },
       }
     ]
-    // NOTE: Replaced for exercise 13.20. TODO delete
-    // include: {
-    //   model: Blog,
-    // },
   });
   res.json(users);
 });
@@ -71,26 +63,19 @@ const userFinder = async (req, res, next) => {
   next();
 };
 
-router.get('/:id', userFinder, async (req, res) => {
+router.get('/:id', authValidation, userFinder, async (req, res) => {
   return res.status(200).json(req.user);
 })
 
-router.get('/username/:username', userFinder, async (req, res) => {
+router.get('/username/:username', authValidation, userFinder, async (req, res) => {
   return res.status(200).json(req.user);
 })
 
-// NOTE: From the material, delete later
-// const isAdmin = async (req, res, next) => {
-//   const user = await User.findByPk(req.decodedToken.id);
-//   if (!user.admin) {
-//     throw new UnauthorizedError('Error, user is not admin')
-//   }
-//   next()
-// }
 
-router.put('/:username', userFinder, async (req, res) => {
+router.put('/:username', authValidation, userFinder, async (req, res) => {
   await req.user.update({
     username: req.body.username,
+    disabled: req.body.disabled
   })
   return res.status(200).json(req.user)
 })

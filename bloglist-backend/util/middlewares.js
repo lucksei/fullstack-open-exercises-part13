@@ -3,7 +3,7 @@ const { NotFoundError, UnauthorizedError } = require("./errors");
 const { ValidationError } = require('sequelize')
 
 const { SECRET, SESSION_TIMEOUT } = require('../util/config');
-const { Session } = require('../models');
+const { Session, User } = require('../models');
 
 const errorHandler = (err, req, res, next) => {
   console.error(err.message);
@@ -34,9 +34,31 @@ const authValidation = async (req, res, next) => {
     throw new UnauthorizedError('token invalid');
   }
 
-  const session = await Session.findOne({ where: { userId: decodedToken.id } })
+  const session = await Session.findOne(
+    {
+      where: {
+        userId: decodedToken.id
+      },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: { include: ['id', 'username', 'disabled'] }
+        },
+      ],
+    });
 
-  if (!session || session.token !== token || session.updatedAt < Date.now() - SESSION_TIMEOUT) {
+  if (!session) {
+    throw new UnauthorizedError('token invalid')
+  }
+
+  console.log(session)
+
+  if (session.user.disabled) {
+    throw new UnauthorizedError('user is disabled')
+  }
+
+  if (session.token !== token || session.updatedAt < Date.now() - SESSION_TIMEOUT) {
     throw new UnauthorizedError('token invalid or expired')
   }
   req.session = session

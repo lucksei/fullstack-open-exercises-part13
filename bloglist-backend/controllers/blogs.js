@@ -5,7 +5,7 @@ const { NotFoundError, UnauthorizedError } = require('../util/errors')
 const { authValidation } = require('../util/middlewares')
 const { sequelize } = require('../util/db')
 
-router.get('/', async (req, res) => {
+router.get('/', authValidation, async (req, res) => {
   const where = {};
 
   if (req.query.search) {
@@ -13,8 +13,6 @@ router.get('/', async (req, res) => {
       title: { [Op.iLike]: `%${req.query.search}%` },
       author: { [Op.iLike]: `%${req.query.search}%` },
     }
-    // NOTE: The following line was replaced for exercise 13.14 above
-    // where.title = { [Op.iLike]: `%${req.query.search}%` }
   }
 
   const blogs = await Blog.findAll({
@@ -56,7 +54,7 @@ router.delete('/:id', authValidation, blogFinder, async (req, res) => {
   return res.status(204).end();
 })
 
-router.put('/:id', blogFinder, async (req, res) => {
+router.put('/:id', authValidation, blogFinder, async (req, res) => {
   await req.blog.update({ likes: req.body.likes })
   return res.status(200).json(req.blog)
 })

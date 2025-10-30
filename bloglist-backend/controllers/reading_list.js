@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const { ReadingList } = require('../models');
 const { NotFoundError } = require('../util/errors');
+const { authValidation } = require('../util/middlewares');
 
-router.post('/', async (req, res) => {
+router.post('/', authValidation, async (req, res) => {
   const { userId, blogId } = req.body;
 
   const readingList = await ReadingList.create({
@@ -21,7 +22,7 @@ const readingListFinder = async (req, res, next) => {
   next();
 }
 
-router.put('/:id', readingListFinder, async (req, res) => {
+router.put('/:id', authValidation, readingListFinder, async (req, res) => {
   await req.readingList.update({
     read: req.body.read
   });

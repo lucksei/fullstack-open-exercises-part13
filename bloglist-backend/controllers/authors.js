@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const { Blog } = require('../models');
 const { sequelize } = require('../util/db');
+const { authValidation } = require('../util/middlewares');
 
-router.get('/', async (req, res) => {
+router.get('/', authValidation, async (req, res) => {
   const authors = await Blog.findAll({
     group: 'author',
     attributes: [
