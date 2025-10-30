@@ -12,6 +12,7 @@ Session.init({
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    unique: true,
     references: {
       model: 'users',
       key: 'id',
@@ -21,14 +22,6 @@ Session.init({
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
   },
 }, {
   sequelize,

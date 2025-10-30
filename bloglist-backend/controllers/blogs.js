@@ -2,7 +2,7 @@ const router = require('express').Router()
 const { Op } = require('sequelize')
 const { Blog, User } = require('../models')
 const { NotFoundError, UnauthorizedError } = require('../util/errors')
-const { tokenExtractor } = require('../util/middlewares')
+const { authValidation } = require('../util/middlewares')
 const { sequelize } = require('../util/db')
 
 router.get('/', async (req, res) => {
@@ -29,8 +29,8 @@ router.get('/', async (req, res) => {
   return res.status(200).json(blogs)
 })
 
-router.post('/', tokenExtractor, async (req, res) => {
-  const user = await User.findByPk(req.decodedToken.id)
+router.post('/', authValidation, async (req, res) => {
+  const user = await User.findByPk(req.session.userId)
   const blog = await Blog.create({ ...req.body, userId: user.id }, { returning: true })
   return res.status(201).json(blog)
 })
@@ -48,8 +48,8 @@ const blogFinder = async (req, res, next) => {
   next()
 }
 
-router.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
-  if (req.blog.userId !== req.decodedToken.id) {
+router.delete('/:id', authValidation, blogFinder, async (req, res) => {
+  if (req.blog.userId !== req.session.userId) {
     throw new UnauthorizedError('Error, blog is not owned by user')
   }
   await req.blog.destroy();

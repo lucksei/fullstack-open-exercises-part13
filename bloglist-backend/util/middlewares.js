@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const { NotFoundError, UnauthorizedError } = require("./errors");
 const { ValidationError } = require('sequelize')
 
-const { SECRET } = require('../util/config');
+const { SECRET, SESSION_TIMEOUT } = require('../util/config');
+const { Session } = require('../models');
 
 const errorHandler = (err, req, res, next) => {
   console.error(err.message);
@@ -19,18 +20,26 @@ const errorHandler = (err, req, res, next) => {
   return res.status(500).json({ error: err.message })
 }
 
-const tokenExtractor = (req, res, next) => {
+const authValidation = async (req, res, next) => {
   const authorization = req.get('authorization')
-  console.log(authorization)
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    try {
-      req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
-    } catch (err) {
-      throw new UnauthorizedError('token invalid');
-    }
-  } else {
+  if (!authorization || !authorization.toLowerCase().startsWith('bearer ')) {
     throw new UnauthorizedError('token missing')
   }
+
+  const token = authorization.substring(7);
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, SECRET);
+  } catch (err) {
+    throw new UnauthorizedError('token invalid');
+  }
+
+  const session = await Session.findOne({ where: { userId: decodedToken.id } })
+
+  if (!session || session.token !== token || session.updatedAt < Date.now() - SESSION_TIMEOUT) {
+    throw new UnauthorizedError('token invalid or expired')
+  }
+  req.session = session
   next()
 }
 
@@ -40,6 +49,6 @@ const unknownEndpoint = (req, res) => {
 
 module.exports = {
   errorHandler,
-  tokenExtractor,
+  authValidation,
   unknownEndpoint,
 }
